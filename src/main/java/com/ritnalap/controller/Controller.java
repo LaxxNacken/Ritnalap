@@ -9,9 +9,14 @@ import com.ritnalap.periphery.LedButton;
 import com.ritnalap.periphery.MotionSensor;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import jdk.internal.org.jline.terminal.MouseEvent.Button;
 
 public class Controller {
   private final LedButton ledButton;
+  private final long DOUBLE_PRESS_MS = 500;
+  private long lastPressTime = 0;
+  private boolean firstPressDetected = false;
+
   private final Buzzer buzzer;
   private final Lcd lcd;
   private final MotionSensor motionSensor;
@@ -48,17 +53,22 @@ public class Controller {
   }
 
   public ButtonStates getButtonState() {
+    long now = System.currentTimeMillis();
     if (ledButton.isDown()) {
-      try {
-        Thread.sleep(200);
-        if (!ledButton.isDown()) {
-          return ButtonStates.SINGLE_PRESS;
-        } else {
-          return ButtonStates.DOUBLE_PRESS;
-        }
-      } catch (InterruptedException e) {
-        e.printStackTrace();
+
+      if (firstPressDetected && (now - lastPressTime <= DOUBLE_PRESS_MS)) {
+        firstPressDetected = false;
+        return ButtonStates.DOUBLE_PRESS;
+      } else {
+        firstPressDetected = true;
+        lastPressTime = now;
+        return null;
       }
+    }
+
+    if (firstPressDetected && (now - lastPressTime > DOUBLE_PRESS_MS)) {
+      firstPressDetected = false;
+      return ButtonStates.SINGLE_PRESS;
     }
     return ButtonStates.RELEASED;
   }
