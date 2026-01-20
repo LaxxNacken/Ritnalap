@@ -9,99 +9,114 @@ import com.ritnalap.periphery.LedButton;
 import com.ritnalap.periphery.MotionSensor;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import jdk.internal.org.jline.terminal.MouseEvent.Button;
 
 public class Controller {
-  private final LedButton ledButton;
-  private final long DOUBLE_PRESS_MS = 500;
-  private long lastPressTime = 0;
-  private boolean firstPressDetected = false;
+	private final LedButton ledButton;
+	private final long DOUBLE_PRESS_MS = 500;
+	private long lastPressTime = 0;
+	private boolean firstPressDetected = false;
 
-  private final Buzzer buzzer;
-  private final Lcd lcd;
-  private final MotionSensor motionSensor;
+	private final Buzzer buzzer;
+	private final Lcd lcd;
+	private final MotionSensor motionSensor;
 
-  public Controller(LedButton ledButton, Buzzer buzzer, Lcd lcd,
-                    MotionSensor motionSensor) {
-    this.ledButton = ledButton;
-    this.buzzer = buzzer;
-    this.lcd = lcd;
-    this.motionSensor = motionSensor;
-  }
+	public Controller(LedButton ledButton, Buzzer buzzer, Lcd lcd,
+			MotionSensor motionSensor) {
+		this.ledButton = ledButton;
+		this.buzzer = buzzer;
+		this.lcd = lcd;
+		this.motionSensor = motionSensor;
+	}
 
-  public void displayHelloWorld() {
-    lcd.clearText();
-    lcd.writeLine("Ritnalap", 0);
-    lcd.writeLine("Ready", 1);
-  }
+	public void displayIdle() {
+		lcd.clearText();
+		lcd.writeLine("Ritnalap", 0);
+		lcd.writeLine("Idle", 1);
+	}
 
-  public void displaySense() {
-    lcd.clearText();
-    lcd.writeLine("Ritnalap", 0);
-    lcd.writeLine("Sensing", 1);
-  }
+	public void displaySense() {
+		lcd.clearText();
+		lcd.writeLine("Ritnalap", 0);
+		lcd.writeLine("Sensing", 1);
+	}
 
-  public void displayAlarm() {
-    lcd.clearText();
+	public void displayAlarm() {
+		lcd.clearText();
 
-    LocalDateTime now = LocalDateTime.now();
-    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+		LocalDateTime now = LocalDateTime.now();
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    lcd.writeLine(now.format(dateFormatter), 0);
-    lcd.writeLine(now.format(timeFormatter), 1);
-  }
+		lcd.writeLine(now.format(dateFormatter), 0);
+		lcd.writeLine(now.format(timeFormatter), 1);
+	}
 
-  public ButtonStates getButtonState() {
-    long now = System.currentTimeMillis();
-    if (ledButton.isDown()) {
+	public ButtonStates getButtonState() {
+		long now = System.currentTimeMillis();
+		if (ledButton.isDown()) {
 
-      if (firstPressDetected && (now - lastPressTime <= DOUBLE_PRESS_MS)) {
-        firstPressDetected = false;
-        return ButtonStates.DOUBLE_PRESS;
-      } else {
-        firstPressDetected = true;
-        lastPressTime = now;
-        return null;
-      }
-    }
+			if (firstPressDetected && (now - lastPressTime <= DOUBLE_PRESS_MS)) {
+				firstPressDetected = false;
+				return ButtonStates.DOUBLE_PRESS;
+			} else {
+				firstPressDetected = true;
+				lastPressTime = now;
+				return null;
+			}
+		}
 
-    if (firstPressDetected && (now - lastPressTime > DOUBLE_PRESS_MS)) {
-      firstPressDetected = false;
-      return ButtonStates.SINGLE_PRESS;
-    }
-    return ButtonStates.RELEASED;
-  }
+		if (firstPressDetected && (now - lastPressTime > DOUBLE_PRESS_MS)) {
+			firstPressDetected = false;
+			return ButtonStates.SINGLE_PRESS;
+		}
+		return ButtonStates.RELEASED;
+	}
 
-  public MotionSensorStates getMotionSensorState() {
-    if (motionSensor.isUp()) {
-      return MotionSensorStates.MOTION;
-    } else {
-      return MotionSensorStates.NO_MOTION;
-    }
-  }
+	public MotionSensorStates getMotionSensorState() {
+		if (motionSensor.isUp()) {
+			System.out.println("Currently up");
+			return MotionSensorStates.MOTION;
+		} else {
+			System.out.println("Currently down");
+			return MotionSensorStates.NO_MOTION;
+		}
+	}
 
-  public void moveIntoIdle() {
-    displayHelloWorld();
-    turnOffAlarm();
-    turnOffLed();
-  }
+	public void moveIntoIdle() {
+		displayIdle();
+		turnOffAlarm();
+		turnOffLed();
+	}
 
-  public void moveIntoSense() {
-    displaySense();
-    turnOnLed();
-  }
+	public void moveIntoSense() {
+		displaySense();
+		turnOnLed();
+		try {
+			Thread.sleep(5000);
 
-  public void moveIntoAlarm() {
-    displayAlarm();
-    turnOnAlarm();
-  }
+		} catch (InterruptedException e) {
+			System.out.println(e.getMessage());
+		}
+	}
 
-  public void turnOffAlarm() { buzzer.off(); }
+	public void moveIntoAlarm() {
+		displayAlarm();
+		turnOnAlarm();
+	}
 
-  public void turnOnAlarm() { buzzer.on(150); }
+	public void turnOffAlarm() {
+		buzzer.off();
+	}
 
-  public void turnOffLed() { ledButton.off(); }
+	public void turnOnAlarm() {
+		buzzer.on(150);
+	}
 
-  public void turnOnLed() { ledButton.on(); }
+	public void turnOffLed() {
+		ledButton.off();
+	}
+
+	public void turnOnLed() {
+		ledButton.on();
+	}
 }

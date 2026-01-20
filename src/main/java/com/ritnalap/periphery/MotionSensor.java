@@ -22,6 +22,7 @@ public class MotionSensor {
 
 	private Runnable onMotion;
 	private Runnable onNoMotion;
+	private DigitalState lastState = DigitalState.LOW;
 
 	/**
 	 * Klassenkonstruktor
@@ -34,8 +35,7 @@ public class MotionSensor {
 	public MotionSensor(Context pi4j, int iPin) {
 		this.pi4j = pi4j;
 		PIN = iPin;
-		var motionConfig = DigitalInput.newConfigBuilder(pi4j)
-				.id("MotionSensor" + iPin)
+		var motionConfig = DigitalInput.newConfigBuilder(pi4j).id("MotionSensor" + iPin)
 				.name("MotionSensor" + iPin)
 				.address(PIN)
 				.provider("pigpio-digital-input");
