@@ -9,6 +9,9 @@ import com.ritnalap.periphery.LedButton;
 import com.ritnalap.periphery.MotionSensor;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Controller {
 	private final LedButton ledButton;
@@ -16,6 +19,7 @@ public class Controller {
 	private long lastPressTime = 0;
 	private boolean waitingSecondPress = false;
 	private final long DOUBLE_PRESS_MS = 500;
+	private ScheduledExecutorService buzzerScheduler;
 
 	private final Buzzer buzzer;
 	private final Lcd lcd;
@@ -112,17 +116,95 @@ public class Controller {
 		turnOnLed();
 	}
 
+	public void stopBuzzer() {
+		if (buzzerScheduler != null && !buzzerScheduler.isShutdown()) {
+			buzzerScheduler.shutdownNow();
+		}
+		buzzer.off(); // ensure buzzer stops immediately
+	}
+
+	public void playFurEliseFull() {
+		stopBuzzer();
+
+		buzzerScheduler = Executors.newSingleThreadScheduledExecutor();
+		ScheduledExecutorService scheduler = buzzerScheduler;
+
+		// Frequencies in Hz (simplified full Für Elise melody)
+		int[] notes = {
+				// A section (first motif)
+				330, 311, 330, 311, 330, 247, 294, 262, 220,
+				196, 262, 330, 247, 294, 220,
+
+				// A section repeat
+				330, 311, 330, 311, 330, 247, 294, 262, 220,
+				196, 262, 330, 247, 294, 220,
+
+				// B section (simplified, recognizable)
+				262, 196, 220, 247, 330, 262, 294, 311, 330,
+				247, 220, 196, 220, 247, 294, 262,
+
+				// Back to A section
+				330, 311, 330, 311, 330, 247, 294, 262, 220,
+				196, 262, 330, 247, 294, 220
+		};
+
+		// Durations in ms (approximate, to mimic phrasing)
+		int[] durations = {
+				// A section
+				200, 200, 200, 200, 200, 200, 200, 200, 400,
+				400, 200, 200, 200, 200, 400,
+
+				// A section repeat
+				200, 200, 200, 200, 200, 200, 200, 200, 400,
+				400, 200, 200, 200, 200, 400,
+
+				// B section
+				300, 300, 300, 300, 400, 300, 300, 300, 400,
+				300, 300, 300, 300, 300, 300, 400,
+
+				// Back to A section
+				200, 200, 200, 200, 200, 200, 200, 200, 400,
+				400, 200, 200, 200, 200, 400
+		};
+
+		int gap = 50; // short gap between notes
+
+		Runnable playMelody = new Runnable() {
+			@Override
+			public void run() {
+				int delay = 0;
+
+				for (int i = 0; i < notes.length; i++) {
+					final int note = notes[i];
+					final int duration = durations[i];
+
+					scheduler.schedule(() -> {
+						buzzer.on(note);
+						scheduler.schedule(() -> buzzer.off(), duration, TimeUnit.MILLISECONDS);
+					}, delay, TimeUnit.MILLISECONDS);
+
+					delay += duration + gap;
+				}
+
+				// Schedule the next loop after this sequence finishes
+				scheduler.schedule(this, delay, TimeUnit.MILLISECONDS);
+			}
+		};
+
+		scheduler.execute(playMelody);
+	}
+
 	public void moveIntoAlarm() {
 		displayAlarm();
 		turnOnAlarm();
 	}
 
 	public void turnOffAlarm() {
-		buzzer.off();
+		stopBuzzer();
 	}
 
 	public void turnOnAlarm() {
-		buzzer.on(150);
+		playFurEliseFull();
 	}
 
 	public void turnOffLed() {
