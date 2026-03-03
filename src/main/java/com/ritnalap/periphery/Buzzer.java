@@ -10,11 +10,7 @@
  * @date    21/01/2025
  *
  */
-
-//DEPS com.pi4j:pi4j-core:2.3.0
-//DEPS com.pi4j:pi4j-plugin-raspberrypi:2.3.0
-//DEPS com.pi4j:pi4j-plugin-pigpio:2.3.0
-//DEPS com.pi4j:pi4j-plugin-linuxfs:2.3.0
+package com.ritnalap.periphery;
 
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
@@ -36,7 +32,7 @@ public class Buzzer {
 	 * @param iPin         Pin an welchem die Buzzer angeschlossen ist.
 	 * @param bHardwarePwm true= Hardware PWM false=Software PWM
 	 */
-	Buzzer(Context pi4j, int iPin, boolean bHardwarePwm) {
+	public Buzzer(Context pi4j, int iPin, boolean bHardwarePwm) {
 		this.pi4j = pi4j;
 		PIN = iPin;
 		PwmConfig buzzerConfig;

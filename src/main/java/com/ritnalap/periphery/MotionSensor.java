@@ -7,13 +7,7 @@
  * @date    09/01/2025
  *
  */
-
-//DEPS org.slf4j:slf4j-api:1.7.35
-//DEPS org.slf4j:slf4j-simple:1.7.35
-//DEPS com.pi4j:pi4j-core:2.3.0
-//DEPS com.pi4j:pi4j-plugin-raspberrypi:2.3.0
-//DEPS com.pi4j:pi4j-plugin-pigpio:2.3.0
-//DEPS com.pi4j:pi4j-plugin-linuxfs:2.3.0
+package com.ritnalap.periphery;
 
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
@@ -28,6 +22,7 @@ public class MotionSensor {
 
 	private Runnable onMotion;
 	private Runnable onNoMotion;
+	private DigitalState lastState = DigitalState.LOW;
 
 	/**
 	 * Klassenkonstruktor
@@ -37,11 +32,10 @@ public class MotionSensor {
 	 * @param pi4j pi4j-Context
 	 * @param iPin Pin an welchem der MotionSensor angeschlossen ist.
 	 */
-	MotionSensor(Context pi4j, int iPin) {
+	public MotionSensor(Context pi4j, int iPin) {
 		this.pi4j = pi4j;
 		PIN = iPin;
-		var motionConfig = DigitalInput.newConfigBuilder(pi4j)
-				.id("MotionSensor" + iPin)
+		var motionConfig = DigitalInput.newConfigBuilder(pi4j).id("MotionSensor" + iPin)
 				.name("MotionSensor" + iPin)
 				.address(PIN)
 				.provider("pigpio-digital-input");

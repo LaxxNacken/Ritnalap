@@ -9,11 +9,7 @@
  * @date    09/01/2025
  *
  */
-
-//DEPS com.pi4j:pi4j-core:2.3.0
-//DEPS com.pi4j:pi4j-plugin-raspberrypi:2.3.0
-//DEPS com.pi4j:pi4j-plugin-pigpio:2.3.0
-//DEPS com.pi4j:pi4j-plugin-linuxfs:2.3.0
+package com.ritnalap.periphery;
 
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
@@ -43,7 +39,7 @@ public class LedButton {
 	 * @param iPinLed    Pin an welchem die LED angeschlossen ist.
 	 * @param iPinButton Pin an welchem die Button angeschlossen ist.
 	 */
-	LedButton(Context pi4j, int iPinLed, int iPinButton) {
+	public LedButton(Context pi4j, int iPinLed, int iPinButton) {
 		this.pi4j = pi4j;
 		PIN_LED = iPinLed;
 		PIN_Button = iPinButton;
@@ -52,7 +48,7 @@ public class LedButton {
 				.name("Button" + iPinLed)
 				.address(PIN_Button)
 				.pull(PullResistance.PULL_DOWN)
-				.debounce(100L)
+				.debounce(300L)
 				.provider("pigpio-digital-input");
 
 		button = pi4j.create(buttonConfig);

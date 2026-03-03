@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.7.35/slf4j-api-1.7.35.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-simple/1.7.35/slf4j-simple-1.7.35.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/pi4j/pi4j-core/2.3.0/pi4j-core-2.3.0.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/pi4j/pi4j-plugin-raspberrypi/2.3.0/pi4j-plugin-raspberrypi-2.3.0.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/pi4j/pi4j-plugin-pigpio/2.3.0/pi4j-plugin-pigpio-2.3.0.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/pi4j/pi4j-library-pigpio/2.3.0/pi4j-library-pigpio-2.3.0.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/pi4j/pi4j-plugin-linuxfs/2.3.0/pi4j-plugin-linuxfs-2.3.0.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/jcraft/jsch/0.1.55/jsch-0.1.55.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/pi4j/pi4j-library-linuxfs/2.3.0/pi4j-library-linuxfs-2.3.0.jar"/>
+	<classpathentry kind="src" output="target/classes" path="src/main/java">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="optional" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="test" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry excluding="**" kind="src" output="target/test-classes" path="src/test/resources">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="test" value="true"/>
+			<attribute name="optional" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="target/generated-sources/annotations">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="ignore_optional_problems" value="true"/>
+			<attribute name="m2e-apt" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="target/test-classes" path="target/generated-test-sources/test-annotations">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="ignore_optional_problems" value="true"/>
+			<attribute name="m2e-apt" value="true"/>
+			<attribute name="test" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>
